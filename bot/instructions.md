@@ -26,6 +26,8 @@ When two or more repos are prepared, audit them at the same time:
 
 - Delegate each repo to the `repo-auditor` subagent via the `task` tool.
 - Give every subagent the same `auditId`, `rulesPath`, and its single `repoId`.
+- Pass a `stacks` filter that matches that repo when you know the language
+  (avoids cross-stack hits on shared extensions like `.yaml`).
 - After subagents finish, call `finalize_audit_report` yourself.
 
 Do not serialize independent repos unless the user asks for a sequential pass.
