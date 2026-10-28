@@ -1,0 +1,106 @@
+{
+  "version": "1.0",
+  "description": "Sample multi-stack audit rules for the codebase-auditor PoC",
+  "stacks": {
+    "python": {
+      "description": "Python services and scripts",
+      "defaultFilePatterns": ["**/*.py"],
+      "rules": [
+        {
+          "id": "py-no-eval",
+          "title": "Do not use eval on untrusted input",
+          "severity": "high",
+          "rule": "Flag any use of eval() or exec() on data that may come from users, requests, files, or environment input. Prefer safe parsers (json, ast.literal_eval) or explicit allowlists.",
+          "filePatterns": ["**/*.py"],
+          "excludePatterns": ["**/test_*.py", "**/tests/**"]
+        },
+        {
+          "id": "py-no-hardcoded-secrets",
+          "title": "No hardcoded secrets",
+          "severity": "high",
+          "rule": "Flag API keys, passwords, tokens, or connection strings assigned as string literals in source. Secrets must come from environment variables or a secret manager.",
+          "filePatterns": ["**/*.py", "**/*.env*", "**/*.yaml", "**/*.yml"]
+        },
+        {
+          "id": "py-sql-parameterize",
+          "title": "Parameterize SQL queries",
+          "severity": "high",
+          "rule": "Flag SQL built with string concatenation or f-strings that include variables. Queries must use parameterized placeholders.",
+          "filePatterns": ["**/*.py"]
+        }
+      ]
+    },
+    "dart": {
+      "description": "Dart and Flutter applications",
+      "defaultFilePatterns": ["**/*.dart"],
+      "rules": [
+        {
+          "id": "dart-no-print-in-prod",
+          "title": "Avoid print() in production paths",
+          "severity": "low",
+          "rule": "Flag print() calls in lib/ (non-test) code. Prefer a logging package with levels so production builds can silence debug output.",
+          "filePatterns": ["**/lib/**/*.dart"],
+          "excludePatterns": ["**/test/**", "**/*_test.dart"]
+        },
+        {
+          "id": "dart-http-timeout",
+          "title": "HTTP clients must set timeouts",
+          "severity": "medium",
+          "rule": "Flag HttpClient or package:http calls that never set a connection or request timeout. Network calls without timeouts can hang the UI isolate.",
+          "filePatterns": ["**/*.dart"]
+        },
+        {
+          "id": "dart-no-hardcoded-api-keys",
+          "title": "No hardcoded API keys in Dart",
+          "severity": "high",
+          "rule": "Flag string literals that look like API keys, Bearer tokens, or secret credentials in Dart source. Load them from --dart-define, secure storage, or backend config.",
+          "filePatterns": ["**/*.dart"]
+        }
+      ]
+    },
+    "java": {
+      "description": "Java / Spring services",
+      "defaultFilePatterns": ["**/*.java"],
+      "rules": [
+        {
+          "id": "java-no-string-sql",
+          "title": "Do not concatenate SQL strings",
+          "severity": "high",
+          "rule": "Flag SQL statements built by concatenating user-controlled strings. Use PreparedStatement or a typed query API.",
+          "filePatterns": ["**/*.java"]
+        },
+        {
+          "id": "java-log-no-secrets",
+          "title": "Do not log secrets",
+          "severity": "medium",
+          "rule": "Flag log statements that include password, token, apiKey, secret, or authorization header values.",
+          "filePatterns": ["**/*.java"]
+        },
+        {
+          "id": "java-close-resources",
+          "title": "Close IO resources",
+          "severity": "medium",
+          "rule": "Flag InputStream, Connection, or Statement usage outside try-with-resources when the resource is opened in the same method.",
+          "filePatterns": ["**/*.java"],
+          "excludePatterns": ["**/src/test/**"]
+        }
+      ]
+    }
+  },
+  "globalRules": [
+    {
+      "id": "global-todo-fixme",
+      "title": "Track FIXME / SECURITY TODOs",
+      "severity": "low",
+      "rule": "Report FIXME, XXX, or TODO comments that mention security, auth, crypto, or password so they are tracked rather than forgotten.",
+      "filePatterns": [
+        "**/*.py",
+        "**/*.dart",
+        "**/*.java",
+        "**/*.ts",
+        "**/*.js",
+        "**/*.go"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+name: dart_app
+description: Fixture Dart app with intentional audit findings
+version: 0.0.1
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+dependencies:
+  http: ^1.2.0

@@ -1,0 +1,21 @@
+{
+  "name": "codebase-auditor",
+  "private": true,
+  "type": "module",
+  "description": "Agent SDK PoC: multi-stack, multi-repo codebase auditor driven by a JSON rules file",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "check:rules": "node scripts/check-rules.mjs",
+    "validate": "agent-sdk validate --dir .",
+    "dev": "agent-sdk dev",
+    "demo:tools": "bash scripts/demo-tool-chain.sh"
+  },
+  "dependencies": {
+    "@grok/agent-sdk": "^0.4.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "typescript": "6.0.3"
+  }
+}
